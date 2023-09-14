@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="merit_view_tree" model="ir.ui.view">
+        <field name="name">appraisal.merit.tree</field>
+        <field name="model">appraisal.merit</field>
+        <field name="arch" type="xml">
+            <tree string="merit" editable="bottom">
+                <field name="sequence" widget="handle" width="30px"/>
+                <field name="name" required="True" width="400px"/>
+                <field name="merit_rating" required="True" width="140px"/>
+                <field name="rating_from" required="True" width="140px"/>
+                <field name="rating_to" required="True" width="140px"/>
+                <field name="merit_year" required="True"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+    <record id="appraisal_merit_config_action" model="ir.actions.act_window">
+        <field name="name">Merit Rating</field>
+        <field name="res_model">appraisal.merit</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="menu_hr_appraisal_merit"
+        name="Merit Rating"
+        action="hr_evaluation.appraisal_merit_config_action"
+        parent="hr_appraisal.menu_hr_appraisal_configuration"
+        sequence="5"
+              />
+    
+</odoo>

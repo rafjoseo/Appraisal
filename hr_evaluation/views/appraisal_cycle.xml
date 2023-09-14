@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cycle_view_tree" model="ir.ui.view">
+        <field name="name">appraisal.cycle.tree</field>
+        <field name="model">appraisal.cycle</field>
+        <field name="arch" type="xml">
+            <tree string="cycle" editable="bottom">
+                <field name="sequence" widget="handle" width="30px"/>
+                <field name="name" required="True" width="400px"/>
+                <field name="appraisal_deadline"/>
+                <field name="rating_start"/>
+                <field name="lock_date"/>
+                <field name="override_lock_date"/>
+                <field name="locked"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+    <record id="appraisal_cycle_config_action" model="ir.actions.act_window">
+        <field name="name">Perfomance Cycle</field>
+        <field name="res_model">appraisal.cycle</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="menu_hr_appraisal_cycle"
+        name="Perfomance Cycle"
+        action="hr_evaluation.appraisal_cycle_config_action"
+        parent="hr_appraisal.menu_hr_appraisal_configuration"
+        sequence="6"
+              />
+    
+</odoo>

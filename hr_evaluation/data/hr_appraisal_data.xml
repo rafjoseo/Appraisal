@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="competency_type_know_how" model="appraisal.competency.line.type">
+            <field name="name">Business and Functional Know-how</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="competency_type_innovation" model="appraisal.competency.line.type">
+            <field name="name">Results Orientation and Innovation</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="competency_type_teamwork" model="appraisal.competency.line.type">
+            <field name="name">Teamwork and Collaboration</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="competency_type_customer" model="appraisal.competency.line.type">
+            <field name="name">Customer Focus</field>
+            <field name="sequence">4</field>
+        </record>
+        <record id="competency_type_leadership" model="appraisal.competency.line.type">
+            <field name="name">Personal Leadership</field>
+            <field name="sequence">5</field>
+        </record>
+
+
+        <record id="part_a" model="appraisal.summary.line.type">
+            <field name="name">Part A: KRAs</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="part_b" model="appraisal.summary.line.type">
+            <field name="name">Part B: Competencies</field>
+            <field name="sequence">2</field>
+        </record>
+    </data>
+
+</odoo>

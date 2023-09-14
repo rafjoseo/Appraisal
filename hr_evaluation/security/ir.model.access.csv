@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_appraisal_cycle,hr_evaluation.appraisal_cycle,model_appraisal_cycle,base.group_user,1,0,0,0
+access_hr_evaluation,hr_evaluation.hr_appraisal,model_hr_appraisal,base.group_user,1,1,1,1
+access_hr_evaluation_hr_job_ratee,hr.hr job,hr.model_hr_job,group_hr_appraisal_Ratee,1,0,0,0
+access_hr_evaluation_hr_job_rater,hr.hr job,hr.model_hr_job,group_hr_appraisal_Rater,1,0,0,0
+access_appraisal_kra_line_ratee,hr_evaluation.appraisal_kra_line_ratee,model_appraisal_kra_line,group_hr_appraisal_Ratee,1,1,1,1
+access_appraisal_kra_line_rater,hr_evaluation.appraisal_kra_line_rater,model_appraisal_kra_line,group_hr_appraisal_Rater,1,1,1,1
+access_appraisal_competency_line_ratee,hr_evaluation.appraisal_competency_line,model_appraisal_competency_line,group_hr_appraisal_Ratee,1,1,1,1
+access_appraisal_competency_line_rater,hr_evaluation.appraisal_competency_line,model_appraisal_competency_line,group_hr_appraisal_Rater,1,1,1,1
+access_appraisal_competency_line_type,hr_evaluation.appraisal_competency_line_type,model_appraisal_competency_line_type,base.group_user,1,1,1,1
+access_appraisal_summary_line,hr_evaluation.appraisal_summary_line,model_appraisal_summary_line,base.group_user,1,1,1,1
+access_appraisal_summary_line_type,hr_evaluation.appraisal_summary_line_type,model_appraisal_summary_line_type,base.group_user,1,1,0,0
+access_appraisal_merit,hr_evaluation.appraisal_merit,model_appraisal_merit,hr_appraisal.group_hr_appraisal_manager,1,1,1,1
+access_appraisal_cycle_admin,hr_evaluation.appraisal_cycle,model_appraisal_cycle,hr_appraisal.group_hr_appraisal_manager,1,1,1,1
+
+
+

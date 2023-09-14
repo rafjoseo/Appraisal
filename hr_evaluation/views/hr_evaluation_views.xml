@@ -1,0 +1,277 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="competency_line_view_form" model="ir.ui.view">
+        <field name="name">appraisal.competency.line.form</field>
+        <field name="model">appraisal.competency.line</field>
+        <field name="arch" type="xml">
+            <form string="Appraisal">
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" placeholder="Title" required="True" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)]}"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="line_type_id" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)], 'required':[('rating_required', '=', True)]}"/>
+                        <field name="date_start" required="True" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)]}"/>
+                        <field name="date_end" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)]}"/>
+                        <field name="display_type" required="1"/>
+                    </group>
+                    <group>
+                        <field name="kra_link" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)], 'required':[('rating_required', '=', True)]}"/>
+                        <field name="weight" widget="percentage" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)], 'required':[('rating_required', '=', True)]}"/>
+                        <field name="rating" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)], 'required':[('rating_required', '=', True)]}"/>
+                        <field name="weighted_rating"/>
+                        <field name="rating_required" invisible="1"/>
+                        <field name="state" invisible="1"/>
+                        <field name="lock" invisible="1"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="description" placeholder="Description" attrs="{'readonly':['|',('state','in', ('pending','done')),('lock', '=', True)], 'required':[('rating_required', '=', True)]}"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="kra_line_view_form" model="ir.ui.view">
+        <field name="name">appraisal.kra.line.form</field>
+        <field name="model">appraisal.kra.line</field>
+        <field name="arch" type="xml">
+            <form string="KRA">
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" placeholder="Title" required="True" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)]}"/>
+                    </h1>
+                </div>
+                <group>
+<!--                     <field name="kra_line_id" placeholder="Title" required="True" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)]}"/> -->
+                    <field name="division_objective" placeholder="Division Objective" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)]}"/>
+                    <field name="individual_objective" placeholder="Individual Objective" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)]}"/>
+                </group>
+                <group>
+                    <group>
+                        <field name="measures" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)]}"/>
+                    </group>
+                    <group>
+                        <field name="weight_a" string="Weight" widget="percentage" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)], 'required':[('rating_required', '=', True)]}"/>
+                        <field name="rating_b" string="Rating" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)], 'required':[('rating_required', '=', True)]}"/>
+                        <field name="weighted_rating" readonly= "True"/>
+                        <field name="rating_required" invisible="1"/>
+                        <field name="state" invisible="1"/>
+                        <field name="lock" invisible="1"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="achievement" placeholder="Achievement" attrs="{'readonly':['|',('state','in', ('pending','done')),('lock', '=', True)], 'required':[('rating_required', '=', True)]}"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_hr_evaluation_form">
+        <field name="name">hr.evaluation.form</field>
+        <field name="model">hr.appraisal</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id" ref="hr_appraisal.view_hr_appraisal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_confirm']" position="attributes">
+                <attribute name="attrs">{'invisible': &quot;['|', ('state', '!=', 'new'), ('lock', '=', True)]&quot;}</attribute>
+            </xpath>  
+            <xpath expr="//button[@name='action_done']" position="attributes">
+                <attribute name="groups">hr_appraisal.group_hr_appraisal_user,hr_evaluation.group_hr_appraisal_Rater</attribute>
+                <attribute name="string">Approve</attribute>
+                <attribute name="attrs">{'invisible': &quot;['|', '|', ('state', '!=', 'pending'), ('waiting_feedback', '=', True), ('lock', '=', True)]&quot;}</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <widget name="web_ribbon" title="Approved" attrs="{'invisible': [('state','!=', 'done')]}"/>
+                <widget name="web_ribbon" title="Locked" bg_color="bg-danger" attrs="{'invisible': [('lock', '!=', True)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='employee_id']" position="attributes">
+                <attribute name="domain">['|', ('user_id', '=', uid), '&amp;', ('parent_id.user_id', '!=', False), ('parent_id.user_id', '=', uid)]</attribute>
+                <!-- submitted by imanage; new record of imanage - employee id is not blank) -->
+                <attribute name="attrs">{'readonly': &quot;['|', '|', '&amp;', ('employee_user_id', '!=', uid), ('state', '!=', 'new'), '&amp;', '&amp;', '&amp;', ('manager_user_ids', 'in', [uid]), ('employee_id', '!=', False), ('state', '=', 'new'), ('appraisal_save', '=', True), '&amp;', '&amp;', ('state', '=', 'new'), ('appraisal_save', '=', True), ('employee_user_id', '=', uid)]&quot;}</attribute>
+            </xpath> 
+            <xpath expr="//field[@name='manager_ids']" position="before">
+<!--                 <field name="image_128" widget="image"/> -->
+                <field name="job_title"/>
+                <field name="salary_grade" attrs="{'readonly':['|',('state','!=', ('new')),('lock', '=', True)]}"/>
+                <field name="years_in_the_position" attrs="{'readonly':['|',('state','!=', ('new')),('lock', '=', True)]}"/>
+                <field name="manager_user_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="1"/>
+                <field name="appraisal_save" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='manager_ids']" position="attributes">
+                <attribute name="attrs">{'readonly': &quot;['|',('state', '!=', 'new'),('lock', '=', True)]&quot;}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='job_id']" position="replace">
+                <field name="cycle" options="{'no_create_edit': True, 'no_create': True}"  attrs="{'readonly':['|',('state','in', ('pending','done')),('lock', '=', True)]}"/>
+                <field name="department_id"/>
+                <field name="years_in_the_company" attrs="{'readonly':['|',('state','!=', ('new')),('lock', '=', True)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='years_in_the_company']" position="after">
+                 <xpath expr="//field[@name='date_close']" readonly="1" position="move"/>
+                 <field name="rating_required" invisible="1"/>
+                 <field name="lock" invisible="1"/>
+            </xpath>
+            <xpath expr="//group/group/field[@name='company_id']/../.." position="after">
+                <notebook>
+                    <page string="User Manual" name="user_manual">
+                        <group>
+                            <field name="instruction" widget="pdf_viewer"/>
+                            <field name="cadg" widget="pdf_viewer"/>
+                        </group>
+                    </page>
+                    <page string="Key Result Areas" name="kra">
+                        <field mode="tree" name="kra_line_ids" widget="section_and_note_one2many">  
+                            <tree string="KRA Lines">
+                                <control>
+                                    <create name="add_kra_control" string="Add kra"/>
+                                </control>
+                                <field name="sequence" widget="handle" />
+                                <field name="name"/>
+                                <field name="division_objective"/>
+                                <field name="individual_objective"/>
+                                <field name="weight_a" string="Weight"/>
+                                <field name="rating_b" string="Rating"/>
+                                <field name="weighted_rating"/>
+                                <field name="state" invisible="1"/>
+                            </tree>
+                        </field>
+                        <group name="note_group" col="6" class="mt-2 mt-md-0">
+                            <group class="oe_subtotal_footer oe_right" name="rating_total">
+                                <field name="kra_total_weighted_rating"/>
+                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                    <label for="kra_total_weight" />
+                                </div>
+                                <field name="kra_total_weight" nolabel="1" class="oe_subtotal_footer_separator" widget='percentage'/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Competencies" name="competencies">
+                        <group>
+                            <div class="row">
+                                <div class="o_hr_skills_group o_group_resume col-lg-12 d-flex">
+                                    <field mode="tree" nolabel="1" name="competency_line_ids" widget="hr_appraisal">
+                                        <tree>
+                                            <field name="line_type_id"/>
+                                            <field name="name"/>
+                                            <field name="kra_link"/>
+                                            <field name="date_start"/>
+                                            <field name="date_end"/>
+                                            <field name="description"/>
+                                            <field name="weight" />
+                                            <field name="rating"/>
+                                            <field name="weighted_rating"/>
+                                            <field name="display_type" invisible="1"/>
+                                            <field name="state" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </div>
+                        </group>
+                        <group name="note_group" col="6" class="mt-2 mt-md-0">
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="rating_total">
+                                <field name="c_total_weighted_rating"/>
+                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                    <label for="c_total_weight" />
+                                </div>
+                                <field name="c_total_weight" nolabel="1" class="oe_subtotal_footer_separator" widget='percentage'/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Summary of Ratings" name="summary">
+                        The total weighted rating for KRAs and total weighted rating for competencies are multiplied to the pre-set KRA-Competency ratio.
+                        The KRA-Competency split could be a minimum of 20% competencies and 80% KRAs up to a maximum of 40% competencies and 60% KRAs.
+                        <field mode="tree"  name="summary_line_ids">
+                            <tree create="false" delete="false" edit="true" editable="top">
+                                <field name="summary_line_type_id" string="Performance Area" readonly="1" force_save="1"/>
+                                <field name="s_total_weighted_rating"/>
+                                <field name="s_overall_weight" widget="percentage" attrs="{'readonly':['|',('state','in', ('done')),('lock', '=', True)]}"/>
+                                <field name="s_subtotal"/>
+                                <field name="state" invisible="1"/>
+                                <field name="lock" invisible="1"/>
+                            </tree>
+                        </field>
+                        <group name="overall_group" col="6" class="mt-2 mt-md-0">
+                            <group class="oe_subtotal_footer oe_right" colspan="3" name="rating_overall">
+                                <field name="overall_performance_score"  style="font-size: 20px; font-weight: bold;"/>
+                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                    <label for="overall_adjectival_rating" />
+                                </div>
+                                <field name="overall_adjectival_rating" nolabel="1" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Comments and Concurrence" name="comments">
+                        <div colspan="7" >
+                            <p>This section gives the employee the opportunity to make any additional comments on the performance review.
+                                The immediate superior may also provide a narrative summary of how the employee performed his/her responsibility and 
+                                factors that influenced the overall rating.</p><br/>
+                        </div>
+                    </page>
+                </notebook>
+            </xpath>
+            <xpath expr="//page[@name='comments']" position="inside">
+                <xpath expr="//group/group//field[@name='manager_feedback_template']/../../../.." position="move"/>
+            </xpath>
+            <xpath expr="//field[@name='employee_feedback_published']" position="attributes">
+                <attribute name="attrs">{'invisible': &quot;['|', '|', ('can_see_employee_publish', '=', False), ('state','in', ('done')), ('lock','=', True)]&quot;}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='employee_feedback']" position="attributes">
+                <attribute name="attrs">{'invisible': &quot;['&amp;', ('employee_feedback_published', '=', False),('can_see_employee_publish', '=', False)]&quot;,'readonly': &quot;['|', '|', ('can_see_employee_publish', '=', False), ('state','in', ('done')), ('lock','=', True)]&quot;}</attribute>
+            </xpath>  
+            <xpath expr="//field[@name='manager_feedback_published']" position="attributes">
+                <attribute name="attrs">{'invisible': &quot;['|', '|', ('can_see_manager_publish', '=', False), ('state','in', ('done')), ('lock','=', True)]&quot;}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='manager_feedback']" position="attributes">
+                <attribute name="attrs">{'invisible': &quot;['&amp;', ('manager_feedback_published', '=', False),('can_see_manager_publish', '=', False)]&quot;,'readonly': &quot;['|', '|', ('can_see_manager_publish', '=', False), ('state','in', ('done')), ('lock','=', True)]&quot;}</attribute>
+            </xpath>         
+            <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='comments']/group[1]" position="after">
+                <group name="rater_superior_comment">
+                    <group>
+                        <div class="row">
+                            <div class="col-12 row">
+                                <h3 class="col-6">Rater's Supervisor's Feedback</h3>
+                                <span class="col-3 text-right" attrs="{'invisible': ['|', ('superior_feedback_published', '=', True), ('state', '=', 'new')]}">Unpublished</span>
+                                <span class="col-3 text-right" attrs="{'invisible': ['|', ('superior_feedback_published', '=', False), ('state', '=', 'new')]}">Published</span>
+                                <field name="superior_feedback_published" groups="hr_evaluation.group_hr_appraisal_RaterSuperior" nolabel="1" widget="boolean_toggle" class="col-2" 
+                                       attrs="{'invisible': ['|', '|', ('can_see_manager_publish', '=', False), ('state','in', ('done')), ('lock','=', True)]}"/>
+                            </div>
+                            <div class="col-12">
+                                <field name="rater_superior_comment" attrs="{
+                                    'invisible': [
+                                        ('superior_feedback_published', '=', False)],
+                                    'readonly': [
+                                        '|', '|',
+                                        ('can_see_manager_publish', '=', False),
+                                        ('state', 'in', ('done')),
+                                        ('lock', '=', True)]}" nolabel="1"/>
+                            </div>
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="res_config_settings_view_employee_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.appraisal</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='appraisal_confirm_manager_mail_template']/.." position="after">
+                <span class="o_form_label">PDF Files</span>
+                <div class="text-muted">
+                    Files for smart button
+                </div>
+                <div class="content-group mt8">
+                    <label for="appraisal_instruction" string="Instruction" class="col-4 col-lg-4 o_light_label"/>
+                    <field name="appraisal_instruction" class="oe_inline"/>
+                    <label for="appraisal_cadg" string="CADG" class="col-4 col-lg-4 o_light_label"/>
+                    <field name="appraisal_cadg" class="oe_inline"/>
+                </div>
+            </xpath>
+        </field>  
+    </record>
+    
+</odoo>
